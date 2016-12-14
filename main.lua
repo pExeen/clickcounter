@@ -7,8 +7,10 @@ function love.load()
   screenW, screenH = love.graphics.getDimensions()
   screenWMid, screenHMid = screenW / 2, screenH / 2
   love.mouse.setVisible(false)
-  font = love.graphics.newFont("BPmono.ttf", 250)
-  font2 = love.graphics.newFont("BPmono.ttf", 40)
+  font = love.graphics.newFont("BPmono.ttf")
+  r = 255
+  g = 255
+  b = 0
 end
 
 function love.update(dt)
@@ -16,19 +18,25 @@ function love.update(dt)
   if time >= timeLimit then
     timeReset()
   end
+  love.graphics.setColor(r, g, b)
 end
 
 function love.draw()
   love.graphics.setFont(font)
+  love.graphics.setNewFont(250)
   love.graphics.print("Clicks : "..mouseClicks, screenWMid -700 , screenHMid - 175)
-  love.graphics.setFont(font2)
-  love.graphics.print("Time : "..time, 0, 0)
+  love.graphics.setNewFont(40)
+  local timeRounded = math.floor(time * 100 + 0.5) / 100
+  love.graphics.print("Time : "..timeRounded, 0, 0)
   love.graphics.print("Last Score : "..lastScore, screenW - 375, 0)
-  love.graphics.print("Hight Score "..hightScore, screenW - 400, screenH - 50)
+  love.graphics.print("Hight Score : "..hightScore, screenW - 400, screenH - 50)
 end
 
-function love.mousepressed(x, y, left, isTouch)
+function love.mousepressed(x, y, button, isTouch)
   mouseClicks = mouseClicks + 1
+  r = love.math.random(255)
+  g = love.math.random(255)
+  b = love.math.random(255)
 end
 
 function love.keypressed(key)
