@@ -7,7 +7,6 @@ function love.load()
   screenW, screenH = love.graphics.getDimensions()
   screenWMid, screenHMid = screenW / 2, screenH / 2
   love.mouse.setVisible(false)
-  font = love.graphics.newFont("BPmono.ttf")
   r = 255
   g = 255
   b = 0
@@ -19,10 +18,10 @@ function love.update(dt)
     timeReset()
   end
   love.graphics.setColor(r, g, b)
+  love.graphics.setBackgroundColor(255-r,255-g,255-b)
 end
 
 function love.draw()
-  love.graphics.setFont(font)
   love.graphics.setNewFont(250)
   love.graphics.print("Clicks : "..mouseClicks, screenWMid -700 , screenHMid - 175)
   love.graphics.setNewFont(40)
