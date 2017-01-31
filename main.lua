@@ -1,16 +1,22 @@
+require "player"
 function love.load()
   timeLimit = 10 --seconds
   mouseClicks = 0
   time = 0
-  lastScore = 0
-  highScore = 0
+
+  players = {Player.new(), Player.new()}
+  currentPlayer = 1
+  inactivePlayer = 2
+
   screenW, screenH = love.graphics.getDimensions()
   screenWMid, screenHMid = screenW / 2, screenH / 2
   love.mouse.setVisible(false)
+
+  arraySize = 0
+
   r = 255
   g = 255
   b = 0
-  scores = {}
 end
 
 function love.update(dt)
@@ -30,12 +36,11 @@ function love.draw()
   timeLeft = timeLimit - timeRounded
   love.graphics.print("Time Left : "..timeLeft, 0, 0)
   love.graphics.print("Last Scores : ", screenW - 375, 0)
-  for i,s in ipairs(scores) do
-
+  for i,s in ipairs(players[currentPlayer].scores) do
     love.graphics.print(s, screenW - 100, i*40)
   end
-
-  love.graphics.print("High Score : "..highScore, screenW - 400, screenH - 50)
+    love.graphics.print("Your High Score : "..players[currentPlayer].highScore, screenW - 400, screenH - 50)
+    love.graphics.print("Opponents High Score : "..players[inactivePlayer].highScore, 10, screenH - 50)
 end
 
 function love.mousepressed(x, y, button, isTouch)
@@ -51,21 +56,33 @@ function love.keypressed(key)
   end
   if key == 'r' then
     timeReset()
-    highScore = 0
+    players[currentPlayer].highScore = 0
   end
   if key == 'c'then
     cheat()
+  end
+  if key == 'backspace' then
+    timeReset()
+    -- players[currentPlayer].score = lastScore
+    player = currentPlayer
+    currentPlayer = inactivePlayer
+    inactivePlayer = player
   end
 end
 
 function timeReset()
   lastScore = mouseClicks
-  if lastScore >= highScore then
-    highScore = lastScore
+  if lastScore >= players[currentPlayer].highScore then
+    players[currentPlayer].highScore = lastScore
   end
-  table.insert(scores, 1, lastScore)
+  if lastScore > 0 then
+    table.insert(players[currentPlayer].scores, 1, lastScore)
+  end
   time = 0
   mouseClicks = 0
+  if table.getn(players[currentPlayer].scores) > 10 then
+    table.remove(players[currentPlayer].scores, 11)
+  end
 end
 
 function cheat()
